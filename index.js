@@ -65,7 +65,7 @@ async function run() {
     //       app.get('/explor', async (req,res) =>{
     //     const cursor =explorCollection.find({});
     //     const products =await cursor.toArray()
-    //     res.send(products)
+    //     res
     //   })
     //   app.get('/explor/:id', async (req, res) => {
     //     const id = req.params.id;
@@ -111,7 +111,7 @@ async function run() {
       file.mv(`${__dirname}/slider_image/${file.name}`, (err) => {
         if (err) {
           console.log(err);
-          return res.status(500).send({ mes: "Fail to Uplode" });
+          return res.status(500).send({ mes: "Faile to Uplode" });
         }
         // return res.send({name : file.name ,path :`/${file.name}`})
         imageCollection.insertOne({ name, img: file.name }).then((result) => {
