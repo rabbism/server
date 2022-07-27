@@ -54,6 +54,11 @@ async function run() {
       const products = await cursor.toArray();
       res.send(products);
     });
+    app.get("/item/:id", async (req, res) => {
+      const query = { _id: ObjectId(req.params.id) };
+      const doctor = await itemsCollection.findOne(query);
+      res.json(doctor);
+    });
     app.delete("/item/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
