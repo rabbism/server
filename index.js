@@ -74,7 +74,7 @@ async function run() {
     //     // console.log('load user with id: ', id);
     //     res.send(user);
     // })
-    app.get("/distount", async (req, res) => {
+    app.get("/discount", async (req, res) => {
       const cursor = discountCollection.find({});
       const review = await cursor.toArray();
       res.send(review);
