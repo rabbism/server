@@ -104,20 +104,31 @@ async function run() {
     app.post("/slider", async (req, res) => {
       const file = req.files.file;
       const name = req.body.name;
+      const email = req.body.email;
 
       // const result=await discount;Collection.insertOne(newReview)
       // res.json(result)fil
-      console.log(name, file);
-      file.mv(`${__dirname}/slider_image/${file.name}`, (err) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).send({ mes: "Faile to Uplode" });
-        }
-        // return res.send({name : file.name ,path :`/${file.name}`})
-        imageCollection.insertOne({ name, img: file.name }).then((result) => {
-          result.send(result.insertedCount > 0);
-        });
-      });
+      console.log(name, file,email);
+      // file.mv(`${__dirname}/slider_image/${file.name}`, (err) => {
+      //   if (err) {
+      //     console.log(err);
+      //     return res.status(500).send({ mes: "Faile to Uplode" });
+      //   }
+      //   // return res.send({name : file.name ,path :`/${file.name}`})
+      //   imageCollection.insertOne({ name, img: file.name }).then((result) => {
+      //     result.send(result.insertedCount > 0);
+      //   });
+      // });
+      const picData = file.data;
+      const encodedPic = picData.toString('base64');
+      const imageBuffer = Buffer.from(encodedPic, 'base64');
+      const img = {
+          name,
+          email,
+          image: imageBuffer
+      }
+      const result = await imageCollection.insertOne(img);
+      res.json(result);
     });
   } finally {
     //   await client.close();
