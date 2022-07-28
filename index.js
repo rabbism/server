@@ -1,4 +1,6 @@
 const express = require("express");
+// const fs = require('fs')
+const fs = require('fs-extra')
 const app = express();
 const port = process.env.PORT || 5000;
 var cors = require("cors");
@@ -110,30 +112,63 @@ async function run() {
       const file = req.files.file;
       const name = req.body.name;
       const email = req.body.email;
+      const filePath =  `${__dirname}/slider_image/${file.name}`
 
       // const result=await discount;Collection.insertOne(newReview)
       // res.json(result)fil
       console.log(name, file,email);
+      file.mv(filePath  , (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({ mes: "Failed to upload " });
+        }
+        const newImg = fs.readFileSync(filePath)
+        const encImg =newImg.toString('base64')
+        const image ={
+          contentType : req.files.file.mimetype,
+          size :req.files.file.size,
+          img : Buffer(encImg , 'base64')
+
+        };
+        // return res.send({name : file.name ,path :`/${file.name}`})
+        // imageCollection.insertOne({ name,email, img: file.name }).then((result) => {
+        //   result.send(result.insertedCount > 0);
+        // });
+        imageCollection.insertOne({ name,email, image })
+        .then((result) => {
+          fs.remove(filePath,err => {
+            if(err){
+              console.log(err)
+              res.status(500).send({ mes: "Failed to upload " });
+            }
+            res.send(result.insertedCount > 0);
+            
+          })
+          
+          
+        });
+      });
       // file.mv(`${__dirname}/slider_image/${file.name}`, (err) => {
       //   if (err) {
       //     console.log(err);
-      //     return res.status(500).send({ mes: "Faile to Uplode" });
+      //     return res.status(500).send({ mes: "Failed to upload " });
       //   }
       //   // return res.send({name : file.name ,path :`/${file.name}`})
-      //   imageCollection.insertOne({ name, img: file.name }).then((result) => {
+      //   imageCollection.insertOne({ name,email, img: file.name }).then((result) => {
       //     result.send(result.insertedCount > 0);
       //   });
       // });
-      const picData = file.data;
-      const encodedPic = picData.toString('base64');
-      const imageBuffer = Buffer.from(encodedPic, 'base64');
-      const img = {
-          name,
-          email,
-          image: imageBuffer
-      }
-      const result = await imageCollection.insertOne(img);
-      res.json(result);
+      // const picData = file.data;
+      // const encodedPic = picData.toString('base64');
+      // const imageBuffer = Buffer.from(encodedPic, 'base64');
+      // console.log(encodedPic)
+      // const img = {
+      //     name,
+      //     email,
+      //     image: imageBuffer
+      // }
+      // const result = await imageCollection.insertOne(img);
+      // res.json(result);
     });
   } finally {
     //   await client.close();
