@@ -44,13 +44,56 @@ async function run() {
     //     res.send(user);
     // })
     // order
+    app.post("/item", async (req, res) => {
+      const file = req.files.file;
+      const name = req.body.name;
+      const subject = req.body.subject;
+      const price = req.body.price;
+      const publisher = req.body.publisher;
+      const filePath =  `${__dirname}/slider_image/${file.name}`
 
-    app.post("/items", async (req, res) => {
-      const order = req.body;
-      order.creatAt = new Date();
-      const result = await itemsCollection.insertOne(order);
-      res.json(result);
-    });
+      // const result=await discount;Collection.insertOne(newReview)
+      // res.json(result)fil
+      console.log(name, file,email,subject,price,publisher);
+      file.mv(filePath  , (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({ mes: "Failed to upload " });
+        }
+        const newImg = fs.readFileSync(filePath)
+        const encImg =newImg.toString('base64')
+        const image ={
+          contentType : req.files.file.mimetype,
+          size :req.files.file.size,
+          img : Buffer(encImg , 'base64')
+
+        };
+        // return res.send({name : file.name ,path :`/${file.name}`})
+        // imageCollection.insertOne({ name,email, img: file.name }).then((result) => {
+        //   result.send(result.insertedCount > 0);
+        // });
+        itemsCollection.insertOne({ name,email, image,subject,price,publisher })
+        .then((result) => {
+          fs.remove(filePath,err => {
+            if(err){
+              console.log(err)
+              res.status(500).send({ mes: "Failed to upload " });
+            }
+            res.send(result.insertedCount > 0);
+            
+          })
+          
+          
+        });
+      });
+    })
+
+    // app.post("/items", async (req, res) => {
+    //   const order = req.body;
+    //   order.creatAt = new Date();
+    //   const result = await itemsCollection.insertOne(order);
+    //   res.json(result);
+    // });
     app.get("/items", async (req, res) => {
       const cursor = itemsCollection.find({});
       const products = await cursor.toArray();
