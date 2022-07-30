@@ -44,7 +44,7 @@ async function run() {
     //     res.send(user);
     // })
     // order
-    app.post("/item", async (req, res) => {
+    app.post("/items", async (req, res) => {
       const file = req.files.file;
       const name = req.body.name;
       const subject = req.body.subject;
@@ -54,7 +54,7 @@ async function run() {
 
       // const result=await discount;Collection.insertOne(newReview)
       // res.json(result)fil
-      console.log(name, file,email,subject,price,publisher);
+      console.log(name, file,subject,price,publisher);
       file.mv(filePath  , (err) => {
         if (err) {
           console.log(err);
@@ -72,7 +72,7 @@ async function run() {
         // imageCollection.insertOne({ name,email, img: file.name }).then((result) => {
         //   result.send(result.insertedCount > 0);
         // });
-        itemsCollection.insertOne({ name,email, image,subject,price,publisher })
+        itemsCollection.insertOne({ name, image,subject,price,publisher })
         .then((result) => {
           fs.remove(filePath,err => {
             if(err){
