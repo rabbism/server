@@ -135,6 +135,28 @@ async function run() {
       const result = await discountCollection.insertOne(newReview);
       res.json(result);
     });
+    //update 
+    app.put('/discount/:id', async(req, res) =>{
+      const id = req.params.id;
+      const updatedUser = req.body;
+      const filter = {_id: ObjectId(id)};
+      const options = { upsert: true };
+      const updatedDoc = {
+          $set: {
+              name: updatedUser.name,
+              email: updatedUser.email
+          }
+      };
+      const result = await discountCollection.updateOne(filter, updatedDoc, options);
+      res.send(result);
+
+  })
+  //get with single 
+  app.get("/discount/:id", async (req, res) => {
+    const query = { _id: ObjectId(req.params.id) };
+    const doctor = await discountCollection.findOne(query);
+    res.json(doctor);
+  });
 
     //image get
 
