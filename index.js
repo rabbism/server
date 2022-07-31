@@ -50,6 +50,7 @@ async function run() {
       const subject = req.body.subject;
       const price = req.body.price;
       const publisher = req.body.publisher;
+      const link = req.body.link;
       const filePath =  `${__dirname}/slider_image/${file.name}`
 
       // const result=await discount;Collection.insertOne(newReview)
@@ -72,7 +73,7 @@ async function run() {
         // imageCollection.insertOne({ name,email, img: file.name }).then((result) => {
         //   result.send(result.insertedCount > 0);
         // });
-        itemsCollection.insertOne({ name, image,subject,price,publisher })
+        itemsCollection.insertOne({ name, image,subject,price,publisher,link })
         .then((result) => {
           fs.remove(filePath,err => {
             if(err){
