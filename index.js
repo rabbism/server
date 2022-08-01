@@ -28,6 +28,7 @@ async function run() {
     const imageCollection = database.collection("imageSlider");
     const discountCollection = database.collection("discountDate");
     const itemsCollection = database.collection("items");
+    const videoCollection = database.collection("video_item");
     // const orderCollection =database.collection('order');
 
     // query for movies that have a runtime less than 15 minutes
@@ -250,6 +251,44 @@ async function run() {
       const result = await imageCollection.deleteOne(query);
       res.send(result);
     });
+
+    //video  all function 
+
+
+    app.get("/video", async (req, res) => {
+      const cursor = videoCollection.find({});
+      const review = await cursor.toArray();
+      res.send(review);
+    });
+    // post review
+    app.post("/video", async (req, res) => {
+      const newReview = req.body;
+      const result = await videoCollection.insertOne(newReview);
+      res.json(result);
+    });
+    //update 
+  //   app.put('/video/:id', async(req, res) =>{
+  //     const id = req.params.id;
+  //     const updatedUser = req.body;
+  //     const filter = {_id: ObjectId(id)};
+  //     const options = { upsert: true };
+  //     const updatedDoc = {
+  //         $set: {
+  //             name: updatedUser.name,
+  //             email: updatedUser.email
+  //         }
+  //     };
+  //     const result = await videoCollection.updateOne(filter, updatedDoc, options);
+  //     res.send(result);
+
+  // })
+  app.delete("/video/:id", async (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    const query = { _id: ObjectId(id) };
+    const result = await videoCollection.deleteOne(query);
+    res.send(result);
+  });
   } finally {
     //   await client.close();
   }
