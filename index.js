@@ -243,6 +243,13 @@ async function run() {
       // const result = await imageCollection.insertOne(img);
       // res.json(result);
     });
+    app.delete("/slider/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: ObjectId(id) };
+      const result = await imageCollections.deleteOne(query);
+      res.send(result);
+    });
   } finally {
     //   await client.close();
   }
