@@ -152,6 +152,13 @@ async function run() {
       res.send(result);
 
   })
+  app.delete("/discount/:id", async (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+    const query = { _id: ObjectId(id) };
+    const result = await discountCollection.deleteOne(query);
+    res.send(result);
+  });
   //get with single 
   app.get("/discount/:id", async (req, res) => {
     const query = { _id: ObjectId(req.params.id) };
