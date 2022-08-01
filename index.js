@@ -247,7 +247,7 @@ async function run() {
       const id = req.params.id;
       console.log(id);
       const query = { _id: ObjectId(id) };
-      const result = await imageCollections.deleteOne(query);
+      const result = await imageCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
